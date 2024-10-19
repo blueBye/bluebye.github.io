@@ -16,7 +16,7 @@ type WindowState = {
 type Store = {
   windows: WindowState[];
   activeWindow: string;
-  addWindow: (title: string, x?: number, y?: number, width?: number, height?: number) => WindowState;
+  addWindow: (title: string, x: number, y: number, width: number, height: number) => WindowState;
   closeWindow: (id: string) => void;
   toggleWindow: (id: string) => void;
   moveWindow: (id: string, x: number, y: number) => void;

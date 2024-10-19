@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars  */
 'use client'
 
-import { DndContext } from '@dnd-kit/core';
+import {DndContext, DragEndEvent} from '@dnd-kit/core';
 import Window from "@/components/window";
 import { windowStore$ } from '@/state/windowState';
 import { observer } from "@legendapp/state/react";
 import Taskbar from "@/components/taskbar";
 
 const Desktop = observer(() => {
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, delta } = event;
-    const id = active.id;
+    const id = String(active.id);
 
     // Get the container bounding box
     const container = document.querySelector('.window-container'); // Ensure the class is unique to the container
+    if (!container) { return }
     const containerRect = container.getBoundingClientRect();
 
     // Get the current window's state
@@ -28,8 +30,9 @@ const Desktop = observer(() => {
       const windowHeight = 0;
 
       // Left and Right bounds
-      if (newX < 0) newX = 0; // No movement beyond left
-      if (newX + windowWidth > containerRect.width) newX = containerRect.width - windowWidth; // No movement beyond right
+      console.log(newX)
+      if (newX > 0) newX = 0; // No movement beyond right
+      // if (-newX + windowWidth < containerRect.width) newX = containerRect.width - windowWidth; // No movement beyond left
 
       // Top and Bottom bounds
       if (newY < 0) newY = 0; // No movement beyond top
@@ -46,7 +49,7 @@ const Desktop = observer(() => {
       <div className="relative w-full h-[calc(100%-80px)] window-container">
         {/* Button to create new windows */}
         <button
-          onClick={() => { windowStore$.addWindow("test", 10, 40) }}
+          onClick={() => { windowStore$.addWindow("test", 0, 40, 100, 100) }}
           className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded"
         >
           Open New Window
