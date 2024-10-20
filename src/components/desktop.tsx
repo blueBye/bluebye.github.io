@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars  */
+/* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-explicit-any  */
 'use client'
 
 import {DndContext, DragEndEvent} from '@dnd-kit/core';
@@ -6,8 +6,11 @@ import Window from "@/components/window";
 import { windowStore$ } from '@/state/windowState';
 import { observer } from "@legendapp/state/react";
 import Taskbar from "@/components/taskbar";
+import {useTranslations} from "next-intl";
 
 const Desktop = observer(() => {
+  const t = useTranslations('Homepage' as any)
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, delta } = event;
     const id = String(active.id);
@@ -31,8 +34,8 @@ const Desktop = observer(() => {
 
       // Left and Right bounds
       console.log(newX)
-      if (newX > 0) newX = 0; // No movement beyond right
-      // if (-newX + windowWidth < containerRect.width) newX = containerRect.width - windowWidth; // No movement beyond left
+      // if (newX > 0) newX = 0; // No movement beyond right
+      if (newX + windowWidth > containerRect.width) newX = containerRect.width - windowWidth; // No movement beyond left
 
       // Top and Bottom bounds
       if (newY < 0) newY = 0; // No movement beyond top
@@ -52,7 +55,7 @@ const Desktop = observer(() => {
           onClick={() => { windowStore$.addWindow("test", 0, 40, 100, 100) }}
           className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded"
         >
-          Open New Window
+          {t("newWindow" as any)}
         </button>
 
         {/* DndContext to handle dragging */}
