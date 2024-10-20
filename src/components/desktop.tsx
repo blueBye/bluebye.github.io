@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-explicit-any  */
 'use client'
 
-import {DndContext, DragEndEvent} from '@dnd-kit/core';
+import {DndContext, DragEndEvent, DragOverlay} from '@dnd-kit/core';
 import Window from "@/components/window";
 import { windowStore$ } from '@/state/windowState';
 import { observer } from "@legendapp/state/react";
 import Taskbar from "@/components/taskbar";
 import {useTranslations} from "next-intl";
+import DesktopIcon from "@/components/desktop-icon";
+import {createSnapModifier} from "@dnd-kit/modifiers";
 
 const Desktop = observer(() => {
   const t = useTranslations('Homepage' as any)
+  const gridSize = 20; // pixels
+  const snapToGridModifier = createSnapModifier(gridSize);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, delta } = event;
@@ -33,8 +37,7 @@ const Desktop = observer(() => {
       const windowHeight = 0;
 
       // Left and Right bounds
-      console.log(newX)
-      // if (newX > 0) newX = 0; // No movement beyond right
+      if (newX < 0) newX = 0; // No movement beyond right
       if (newX + windowWidth > containerRect.width) newX = containerRect.width - windowWidth; // No movement beyond left
 
       // Top and Bottom bounds
@@ -50,16 +53,24 @@ const Desktop = observer(() => {
       <Taskbar />
 
       <div className="relative w-full h-[calc(100%-80px)] window-container">
-        {/* Button to create new windows */}
-        <button
-          onClick={() => { windowStore$.addWindow("test", 0, 40, 100, 100) }}
-          className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          {t("newWindow" as any)}
-        </button>
-
         {/* DndContext to handle dragging */}
         <DndContext onDragEnd={handleDragEnd}>
+          {/*<DragOverlay modifiers={[snapToGridModifier]}>*/}
+          {/*  */}
+          {/*</DragOverlay>*/}
+
+          <div className="flex flex-col flex-wrap gap-4 p-4 top-0 left-0 absolute h-[calc(100%+40px)]">
+            <DesktopIcon title={"README.txt"} id={"readme"}/>
+            <DesktopIcon title={"eula.txt"} id={"eula"}/>
+            <DesktopIcon title={"blog"} id={"blog"}/>
+            <DesktopIcon title={"blog2"} id={"blog"}/>
+            <DesktopIcon title={"blog3"} id={"blog"}/>
+            <DesktopIcon title={"blog4"} id={"blog"}/>
+            <DesktopIcon title={"blog5"} id={"blog"}/>
+            <DesktopIcon title={"blog6"} id={"blog"}/>
+            <DesktopIcon title={"blog7"} id={"blog"}/>
+          </div>
+
           {/* Render all windows */}
           {windowStore$.windows.get().map((window) => (
             <Window key={window.id} id={window.id}>
