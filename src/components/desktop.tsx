@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-explicit-any  */
 'use client'
 
-import {DndContext, DragEndEvent, DragOverlay} from '@dnd-kit/core';
+import {DndContext, DragEndEvent} from '@dnd-kit/core';
 import Window from "@/components/window";
 import { windowStore$ } from '@/state/windowState';
 import { observer } from "@legendapp/state/react";
 import Taskbar from "@/components/taskbar";
-import {useTranslations} from "next-intl";
 import DesktopIcon from "@/components/desktop-icon";
-import {createSnapModifier} from "@dnd-kit/modifiers";
+import useRTL from "@/hooks/useRTL";
 
 const Desktop = observer(() => {
-  const t = useTranslations('Homepage' as any)
-  const gridSize = 20; // pixels
-  const snapToGridModifier = createSnapModifier(gridSize);
+  const isRTL = useRTL()
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, delta } = event;
@@ -55,11 +52,12 @@ const Desktop = observer(() => {
       <div className="relative w-full h-[calc(100%-80px)] window-container">
         {/* DndContext to handle dragging */}
         <DndContext onDragEnd={handleDragEnd}>
-          {/*<DragOverlay modifiers={[snapToGridModifier]}>*/}
-          {/*  */}
-          {/*</DragOverlay>*/}
 
-          <div className="flex flex-col flex-wrap gap-4 p-4 top-0 left-0 absolute h-[calc(100%+40px)]">
+          <div
+            className={
+              `flex flex-col gap-4 p-4 top-0 absolute h-[calc(100%+40px)] 
+              ${isRTL?"flex-wrap-reverse right-0":"left-0 flex-wrap"}`
+          }>
             <DesktopIcon title={"README.txt"} id={"readme"}/>
             <DesktopIcon title={"eula.txt"} id={"eula"}/>
             <DesktopIcon title={"blog"} id={"blog"}/>

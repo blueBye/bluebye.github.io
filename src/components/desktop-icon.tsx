@@ -16,7 +16,7 @@ const DesktopIcon = ({id, title}: DesktopIconProp) => {
 
   // Function to handle double-click
   const handleDoubleClick = () => {
-    windowStore$.addWindow("test", 0, 40, 100, 100)
+    windowStore$.addWindow("test long title for example", 0, 40, 200, 100)
   };
 
   // Function to handle right-click
@@ -67,7 +67,7 @@ const DesktopIcon = ({id, title}: DesktopIconProp) => {
 
       {/* Icon description: show full text if clicked, otherwise truncate */}
       <p
-        className={`text-center text-xs text-gray-800 ${
+        className={`text-center text-lg text-gray-800 ${
           isClicked ? "whitespace-normal" : "truncate"
         } w-full`}
       >

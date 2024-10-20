@@ -1,5 +1,8 @@
 {
   "Homepage": {
     "newWindow": "new window"
+  },
+  "Taskbar": {
+    "programs": "Programs"
   }
 }

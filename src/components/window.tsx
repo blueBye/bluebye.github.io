@@ -6,6 +6,7 @@ import { windowStore$ } from "@/state/windowState";
 import { observer } from "@legendapp/state/react";
 import { Button } from "@/components/ui/button";
 import {Grip, Minus, X} from 'lucide-react';
+import useRTL from "@/hooks/useRTL";
 
 type WindowProps = {
   id: string;
@@ -13,6 +14,7 @@ type WindowProps = {
 };
 
 const Window = observer(({ id, children }: WindowProps) => {
+  const isRTL = useRTL()
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
@@ -57,7 +59,7 @@ const Window = observer(({ id, children }: WindowProps) => {
     const startY = event.clientY;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      const newWidth = Math.max(startWidth + (moveEvent.clientX - startX), 100); // Minimum width
+      const newWidth = Math.max(startWidth + (moveEvent.clientX - startX), 200); // Minimum width
       const newHeight = Math.max(startHeight + (moveEvent.clientY - startY), 100); // Minimum height
 
       windowStore$.resizeWindow(id, newWidth, newHeight);
@@ -78,39 +80,47 @@ const Window = observer(({ id, children }: WindowProps) => {
       className="bg-gray-300 border-2 border-black shadow-md absolute"
     >
       {/* Title Bar - Draggable Area */}
-      <div className="relative">
+      <div className={"relative"}>
         <div
           ref={setNodeRef}
-          className="bg-blue-800 text-white font-bold px-2 py-1 flex justify-between items-center cursor-move top-0 left-0"
+          style={{direction: isRTL?'rtl':'ltr'}}
+          className={`bg-blue-800 text-white font-bold px-2 py-1 w-full cursor-move top-0 ${isRTL?'right-0 text-right':''}`}
           {...listeners}
           {...attributes}
         >
-          <span>{title}</span>
+          <span
+            className="whitespace-nowrap overflow-hidden text-ellipsis"
+            style={{ display: 'block', maxWidth: 'calc(100% - 80px)' }}
+          >
+            {title}
+          </span>
         </div>
 
-        <Button
-          className="absolute z-10 right-8 top-1 rounded-full w-6 h-6 hover:bg-blue-600"
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent drag interference
-            windowStore$.toggleWindow(windowState.id);
-          }}
-        >
-          <Minus className="w-4 h-4 text-yellow-500" />
-        </Button>
+        <div className={`absolute flex top-2 z-10 gap-x-2 bg-blue-800 ${isRTL ? 'left-2 flex-row-reverse':'right-2'}`}>
+          <Button
+            className="rounded-full w-6 h-6 hover:bg-blue-600"
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent drag interference
+              windowStore$.toggleWindow(windowState.id);
+            }}
+          >
+            <Minus className="w-4 h-4 text-yellow-500" />
+          </Button>
 
-        <Button
-          className="absolute z-10 right-1 top-1 rounded-full w-6 h-6 hover:bg-blue-60"
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent drag interference
-            windowStore$.closeWindow(windowState.id);
-          }}
-        >
-          <X className="w-4 h-4 text-red-500" />
-        </Button>
+          <Button
+            className="rounded-full w-6 h-6 hover:bg-blue-600"
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent drag interference
+              windowStore$.closeWindow(windowState.id);
+            }}
+          >
+            <X className="w-4 h-4 text-red-500" />
+          </Button>
+        </div>
       </div>
 
       {/* Window Content */}
