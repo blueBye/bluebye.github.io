@@ -5,6 +5,8 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, unstable_setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
 import React from "react";
+import { GoogleAnalytics } from '@next/third-parties/google'
+
 
 const arapix = localFont({
   src: "../fonts/Arapix.woff",
@@ -43,6 +45,7 @@ export default async function RootLayout({
           {children}
         </NextIntlClientProvider>
       </body>
+      <GoogleAnalytics gaId={`${process.env.NEXT_PUBLIC_GA_ID}`} />
     </html>
   );
 }

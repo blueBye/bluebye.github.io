@@ -19,7 +19,7 @@ const useRTL = (): boolean => {
       }
     }
 
-  }, []);
+  }, [local]);
 
   return isRTL;
 };
